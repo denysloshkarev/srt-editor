@@ -17,6 +17,9 @@ const getters = {
     isVideoSelected(state) {
         return !!state.videoUrl
     },
+    isVideoPlaying(state) {
+        return !!state.playInterval
+    },
     cursorPos(state) {
         return state.cursorPos
     },

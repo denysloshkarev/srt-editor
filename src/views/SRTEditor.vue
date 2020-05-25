@@ -55,8 +55,8 @@
                             <div class="subtitle"
                                  :style="{
                                         width: `${subtitle.width}px`,
-                                        background: 'red',
                                      }"
+                                 @mouseup="onSubtitleMouseUp"
                             >{{ subtitle.title }}
                             </div>
                         </vue-draggable-resizable>
@@ -80,6 +80,7 @@
         computed: {
             ...mapGetters('editor', {
                 isVideoSelected: 'isVideoSelected',
+                isVideoPlaying: 'isVideoPlaying',
                 editorMeta: 'metaData',
                 editorCursorPos: 'cursorPos',
                 videoUrl: 'videoUrl',
@@ -103,6 +104,14 @@
         watch: {
             isVideoSelected(isVideoSelected) {
                 if (!isVideoSelected) this.$router.replace('/')
+            },
+            editorCursorPos(position) {
+                if (!this.isVideoPlaying) return;
+                const center = parseInt(window.innerWidth / 2);
+                const cursorWindowPosition = position - this.$refs.gridWrapper.scrollLeft;
+                if (cursorWindowPosition > center || (this.$refs.gridWrapper.scrollLeft && cursorWindowPosition !== center)) {
+                    this.$refs.gridWrapper.scrollLeft += cursorWindowPosition - center;
+                }
             }
         },
         mounted() {
@@ -132,6 +141,7 @@
             ...mapActions('subtitles', {
                 importSRT: 'importSRT',
                 setSubtitlePosition: 'setPosition',
+                resortSubtitles: 'resort',
             }),
             onDrag(x) {
                 if (x <= 0) return false;
@@ -145,6 +155,9 @@
                 this.setSubtitlePosition({
                     index, position: x
                 });
+            },
+            onSubtitleMouseUp() {
+                this.resortSubtitles();
             },
             onGridClick(event) {
                 const pl = window.getComputedStyle(this.$refs.gridPositioner, null)

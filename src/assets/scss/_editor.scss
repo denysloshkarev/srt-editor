@@ -63,7 +63,7 @@
 
             &__wrapper { //  editor timeline grid__wrapper
                 border-top: 1px solid #474749;
-                padding: 0 0 40px;
+                padding: 0 0 20px;
                 overflow: scroll;
                 display: flex;
                 min-width: 100%;
@@ -90,10 +90,20 @@
             }
         }
 
-        .subtitle {
-            &__wrapper { //  editor timeline subtitle__wrapper
-                position: absolute;
-                top: 40px;
+        .subtitles {
+            height: 65px;
+            position: relative;
+
+            .subtitle {
+                height: 100%;
+                overflow:hidden;
+
+                &__wrapper { //  editor timeline subtitle__wrapper
+                    position: absolute;
+                    background: $bg-subtitle;
+                    border: 1px solid $subtitle-border;
+                    padding: 5px;
+                }
             }
         }
     }

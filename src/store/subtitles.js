@@ -61,6 +61,14 @@ const actions = {
     setPosition({ commit }, data) {
         commit(types.SUBTITLES_SET_POSITION, data);
     },
+    resort({ commit, state }) {
+        const sorted = state.subtitles.sort((a, b) => {
+            if (a.positionFrom < b.positionFrom) return -1;
+            if (a.positionFrom > b.positionFrom) return 1;
+            return 0;
+        });
+        commit(types.SUBTITLES_SET, sorted);
+    },
 }
 
 export default {
