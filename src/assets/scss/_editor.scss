@@ -3,6 +3,30 @@
 
     .main {
         padding: 20px;
+        position: relative;
+
+        .video {
+            &__mask { //  editor main video__mask
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                padding: 20px 20px 40px;
+                pointer-events: none;
+            }
+            &__subtitles { //  editor main video__subtitles
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                align-items: center;
+                height: 100%;
+            }
+            &__subtitle { //  editor main video__subtitle
+                padding: 10px;
+                background: $bg-video-subtitle;
+            }
+        }
     }
 
     .sidebar {
@@ -63,6 +87,13 @@
                 display: block;
                 height: 100%;
                 width: 1px;
+            }
+        }
+
+        .subtitle {
+            &__wrapper { //  editor timeline subtitle__wrapper
+                position: absolute;
+                top: 40px;
             }
         }
     }

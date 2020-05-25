@@ -1,6 +1,8 @@
 <template>
     <div class="home">
-        <file-input @input="setVideoUrl" />
+        <file-input read-type="blobUrl"
+                    @input="onFileSelect"
+        />
     </div>
 </template>
 
@@ -17,7 +19,11 @@
         methods: {
             ...mapActions('editor', {
                 setVideoUrl: 'setUrl'
-            })
+            }),
+            onFileSelect(url) {
+                this.setVideoUrl(url);
+                this.$router.push({name: 'SRTEditor'})
+            }
         }
     }
 </script>
