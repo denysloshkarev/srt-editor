@@ -1,4 +1,4 @@
-# srt-editor
+# SRT Editor
 
 ## Project setup
 ```
