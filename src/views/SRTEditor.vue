@@ -18,9 +18,10 @@
                 <file-input read-type="text"
                             @input="onFileSelect"
                 />
-                <div v-for="(subtitle, index) in subtitles" :key="index">
-                    {{ subtitle.title }}
-                </div>
+                <Subtitle v-for="subtitle in subtitles"
+                          :key="subtitle.key"
+                          :data="subtitle"
+                />
             </div>
         </div>
         <div class="panel panel--row timeline">
@@ -43,20 +44,22 @@
                     </vue-draggable-resizable>
                     
                     <div class="subtitles">
-                        <vue-draggable-resizable v-for="(subtitle, index) in subtitles"
-                                                 :key="index"
+                        <vue-draggable-resizable v-for="subtitle in subtitles"
+                                                 :key="subtitle.key"
                                                  class-name="subtitle__wrapper"
+                                                 class-name-active="bordered"
                                                  :resizable="false"
                                                  :w="subtitle.width" :h="50"
                                                  :x="subtitle.positionFrom"
                                                  axis="x"
-                                                 :onDrag="(x,y) => onSubtitleDrag(x, y, subtitle, index)"
+                                                 :onDrag="(x,y) => onSubtitleDrag(x, y, subtitle)"
                         >
                             <div class="subtitle"
                                  :style="{
                                         width: `${subtitle.width}px`,
                                      }"
                                  @mouseup="onSubtitleMouseUp"
+                                 @click.stop="onSubtitleTouch(subtitle)"
                             >{{ subtitle.title }}
                             </div>
                         </vue-draggable-resizable>
@@ -71,9 +74,11 @@
     import {mapActions, mapGetters} from "vuex";
     import VueDraggableResizable from 'vue-draggable-resizable'
     import FileInput from "../components/FileInput";
+    import Subtitle from "../components/Subtitle";
     
     export default {
         components: {
+            Subtitle,
             FileInput,
             VueDraggableResizable
         },
@@ -130,6 +135,12 @@
                     this.$refs.videoNode.addEventListener("pause", this.onVideoEnd);
                 }
             })
+            document.addEventListener('click', this.onDocumentClick);
+            document.addEventListener('touch', this.onDocumentClick);
+        },
+        beforeDestroy() {
+            document.removeEventListener('click', this.onDocumentClick);
+            document.removeEventListener('touch', this.onDocumentClick);
         },
         methods: {
             ...mapActions('editor', {
@@ -141,23 +152,35 @@
             ...mapActions('subtitles', {
                 importSRT: 'importSRT',
                 setSubtitlePosition: 'setPosition',
-                resortSubtitles: 'resort',
+                subtitlesSort: 'resort',
+                subtitlesSetFocus: 'setFocus',
+                subtitlesClearFocus: 'clearFocus',
             }),
+            onDocumentClick() {
+                this.subtitlesClearFocus();
+            },
             onDrag(x) {
                 if (x <= 0) return false;
                 if (x >= this.editorMeta.tlWidth) return false;
                 this.setVideoPosition(x);
                 this.setVideoPositionTime(x);
             },
-            onSubtitleDrag(x, y, subtitle, index) {
+            onSubtitleDrag(x, y, subtitle) {
                 if (x <= 0) return false;
                 if (x >= this.editorMeta.tlWidth - subtitle.width) return false;
                 this.setSubtitlePosition({
-                    index, position: x
+                    key: subtitle.key, position: x
                 });
             },
             onSubtitleMouseUp() {
-                this.resortSubtitles();
+                this.subtitlesSort();
+            },
+            onSubtitleTouch(subtitle) {
+                this.subtitlesClearFocus();
+                this.subtitlesSetFocus({
+                    key: subtitle.key,
+                    focus: true,
+                })
             },
             onGridClick(event) {
                 const pl = window.getComputedStyle(this.$refs.gridPositioner, null)

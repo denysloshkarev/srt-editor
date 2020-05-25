@@ -32,7 +32,58 @@
     .sidebar {
         width: 500px;
         background: $bg-editor;
-        padding: 15px;
+        padding: 15px 0;
+
+        .subtitle { //  editor sidebar subtitle
+
+            input, textarea {
+                background: transparent;
+                width: 50px;
+                border: 1px solid transparent;
+                color: $text-primary;
+                text-align: center;
+
+                &:focus {
+                    outline: none;
+                    border-color: $subtitle-border-focus;
+                }
+            }
+
+            input {
+                width: 50px;
+                padding: 2px 4px;
+            }
+
+            textarea {
+                width: 100%;
+                resize: none;
+                text-align: left;
+                padding: 5px;
+            }
+
+            &__wrapper {
+                padding: 10px 15px;
+                background: $bg-editor;
+
+                &.focused {
+                    background: $bg-editor-ligth;
+                }
+
+                &:hover:not(.focused) {
+                    background: $bg-editor-hover;
+                }
+            }
+
+            &__times { //  editor timeline subtitles subtitle__times
+                margin-right: 10px;
+                display: flex;
+                flex-direction: column;
+
+                input:first-child {
+                    margin-bottom: 4px;
+                }
+            }
+        }
     }
 
     .timeline {
