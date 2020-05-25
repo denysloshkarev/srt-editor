@@ -83,10 +83,8 @@
             onDrag(x) {
                 if (x <= 0) return false;
                 if (x >= this.editorMeta.tlWidth) return false;
-                this.setVideoPosition(x)
-                
-                const {tlWidth, duration} = this.editorMeta;
-                this.$refs.videoNode.currentTime = duration * x / tlWidth;
+                this.setVideoPosition(x);
+                this.setVideoPositionTime(x);
             },
             onGridClick(event) {
                 const pl = window.getComputedStyle(this.$refs.gridPositioner, null)
@@ -94,7 +92,9 @@
                 
                 const position = this.$refs.gridWrapper.scrollLeft + event.x - parseInt(pl, 10);
                 this.setVideoPosition(position);
-                
+                this.setVideoPositionTime(position);
+            },
+            setVideoPositionTime(position) {
                 const {tlWidth, duration} = this.editorMeta;
                 this.$refs.videoNode.currentTime = duration * position / tlWidth;
             },

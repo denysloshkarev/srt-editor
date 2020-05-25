@@ -52,11 +52,13 @@ const actions = {
         commit(types.EDITOR_SET_POSITION, position)
     },
     startPlaying({commit, state}, node) {
-        const {tlWidth, duration} = state.metaData;
-        state.playInterval = setInterval(() => {
-            const currentTime = node.currentTime;
-            commit(types.EDITOR_SET_POSITION, currentTime / duration * tlWidth)
-        }, 20)
+        if (!state.playInterval) {
+            const {tlWidth, duration} = state.metaData;
+            state.playInterval = setInterval(() => {
+                const currentTime = node.currentTime;
+                commit(types.EDITOR_SET_POSITION, currentTime / duration * tlWidth)
+            }, 20)
+        }
     },
     stopPlaying({state}) {
         if (state.playInterval) {
