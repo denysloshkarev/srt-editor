@@ -84,6 +84,9 @@
                 if (x <= 0) return false;
                 if (x >= this.editorMeta.tlWidth) return false;
                 this.setVideoPosition(x)
+                
+                const {tlWidth, duration} = this.editorMeta;
+                this.$refs.videoNode.currentTime = duration * x / tlWidth;
             },
             onGridClick(event) {
                 const pl = window.getComputedStyle(this.$refs.gridPositioner, null)
